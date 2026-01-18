@@ -1,0 +1,20 @@
+diff --git a/config/components/ets_frontend/es2abc_config.gni b/config/components/ets_frontend/es2abc_config.gni
+index 54fefcc..ac1419f 100644
+--- a/config/components/ets_frontend/es2abc_config.gni
++++ b/config/components/ets_frontend/es2abc_config.gni
+@@ -121,12 +121,12 @@ template("es2abc_gen_newest_abc") {
+     script = "//build/scripts/generate_js_bytecode.py"
+ 
+     deps = extra_dependencies
+-    if (host_toolchain == toolchain_mac) {
++    if (ark_standalone_build) {
++      deps += es2abc_build_deps
++    } else if (host_toolchain == toolchain_mac) {
+       external_deps = ["ets_frontend:es2panda($toolchain_mac)"]
+     } else if (host_toolchain == toolchain_win) {
+       external_deps = ["ets_frontend:es2panda(${host_toolchain})"]
+-    } else if (ark_standalone_build) {
+-      deps += es2abc_build_deps
+     } else {
+       external_deps = ["ets_frontend:es2panda($toolchain_linux)"]
+     }
