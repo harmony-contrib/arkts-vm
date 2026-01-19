@@ -1,0 +1,22 @@
+name: OpenHarmony Repo Setup
+
+on: [push, pull_request]
+
+jobs:
+  env-setup:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Run Setup Script
+        shell: bash
+        run: |
+          chmod +x ./build.sh
+          ./build.sh
