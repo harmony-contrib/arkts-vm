@@ -1,6 +1,6 @@
 # ArkTS-VM
 
-This project provide an out of box executable binary to run `abc` file.
+This project provides an out-of-the-box executable binary to run `abc` files.
 
 ## GitHub Action (setup-arkvm)
 
@@ -16,21 +16,20 @@ This project provide an out of box executable binary to run `abc` file.
 
 ### Inputs
 
-| Name           | Type    | Default   | Description                                      |
-| -------------- | ------- | --------- | ------------------------------------------------ |
-| tag            | String  | 6.0.0     | Release tag，从 arkts-vm releases 下载           |
-| cache          | Boolean | true      | 是否使用 GitHub Actions cache 缓存安装目录       |
-| skip-download  | Boolean | false     | 跳过下载，使用已有的 $HOME/setup-arkvm 下压缩包   |
+| Name          | Type    | Default | Description                                                 |
+| ------------- | ------- | ------- | ----------------------------------------------------------- |
+| tag           | String  | 6.0.0   | Release tag to download from arkts-vm releases              |
+| cache         | Boolean | true    | Use GitHub Actions cache for the installation directory     |
+| skip-download | Boolean | false   | Skip download; use existing archive under $HOME/setup-arkvm |
 
 ### Outputs
 
-| Name       | Description                    |
-| ---------- | ------------------------------ |
-| arkvm-path | 安装根目录（如 $HOME/setup-arkvm/arkvm） |
-| platform   | linux-x64 或 macos-arm64        |
+| Name       | Description                                      |
+| ---------- | ------------------------------------------------ |
+| arkvm-path | Installation root (e.g. $HOME/setup-arkvm/arkvm) |
+| platform   | linux-x64 or macos-arm64                         |
 
-### Support Platforms
+### Supported Platforms
 
 - x86_64 Linux (gnu)
 - aarch64 macOS (Apple Silicon)
-
