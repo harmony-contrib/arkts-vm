@@ -19,8 +19,6 @@ jobs:
       - name: Setup arkvm
         id: setup
         uses: ./
-        with:
-          cache: true
 
       - name: Compile hello.ts to abc
         run: |
