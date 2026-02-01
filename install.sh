@@ -136,7 +136,7 @@ fi
 
 # Extract
 echo "Extracting arkvm..."
-tar -xf "arkvm-ohos.tar.gz"
+tar -xzvf "arkvm-ohos.tar.gz"
 
 # Archive layout: 单层目录（内含 bin）或顶层多个目录；不限制具体目录名
 TOP_DIRS=$(find . -maxdepth 1 -type d ! -name . | sed 's|^\./||' | sort)
