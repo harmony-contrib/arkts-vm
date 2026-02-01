@@ -16,14 +16,14 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         echo "Error: Only x86_64 Linux is supported"
         exit 1
     fi
-    OS_FILENAME="arkvm-x86_64-linux-gnu.tar.gz"
+    OS_FILENAME="arkvm_linux_x64.tar.gz"
     OS="linux-x64"
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     if [[ $(uname -m) != 'arm64' ]]; then
         echo "Error: Only ARM64 macOS is supported"
         exit 1
     fi
-    OS_FILENAME="arkvm-aarch64-macos.tar.gz"
+    OS_FILENAME="arkvm_darwin_arm64.tar.gz"
     OS="macos-arm64"
 else
     echo "Error: Unsupported OS type. Supported platforms:"
