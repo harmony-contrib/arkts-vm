@@ -1,0 +1,64 @@
+# 与 openharmony-zig/setup-zig-ohos 同构：action 在仓库根目录
+# 从 harmony-contrib/arkts-vm releases 安装 arkvm，并配置 PATH 与库搜索路径
+name: 'Setup arkvm'
+description: 'Install arkts-vm (arkvm) from GitHub releases, set PATH and LD_LIBRARY_PATH/DYLD_LIBRARY_PATH'
+
+inputs:
+  tag:
+    description: 'Release tag to install (e.g. 6.0.0)'
+    required: false
+    default: '6.0.0'
+  cache:
+    description: 'Use GitHub Actions cache for the installation'
+    required: false
+    default: 'true'
+  skip-download:
+    description: 'Skip download; use existing archive at $HOME/setup-arkvm/arkvm-ohos.tar.gz'
+    required: false
+    default: 'false'
+
+outputs:
+  arkvm-path:
+    description: 'Installation root (e.g. $HOME/setup-arkvm/arkvm)'
+    value: ${{ steps.install.outputs.arkvm-path }}
+  platform:
+    description: 'Detected platform (linux-x64 or macos-arm64)'
+    value: ${{ steps.install.outputs.platform }}
+
+runs:
+  using: composite
+  steps:
+    - name: Restore arkvm cache
+      id: cache
+      if: inputs.cache == 'true'
+      uses: actions/cache/restore@v4
+      with:
+        path: ${{ runner.tool_cache }}/setup-arkvm
+        key: arkvm-${{ runner.os }}-${{ inputs.tag }}
+
+    - name: Install arkvm
+      id: install
+      shell: bash
+      env:
+        INPUT_TAG: ${{ inputs.tag }}
+        INPUT_WAS_CACHED: ${{ inputs.cache == 'true' && steps.cache.outputs.cache-hit == 'true' }}
+        SKIP_DOWNLOAD: ${{ inputs.skip-download }}
+      run: |
+        CACHE_DIR="${{ runner.tool_cache }}/setup-arkvm"
+        HOME_CACHE="$HOME/setup-arkvm"
+        if [[ "${{ inputs.cache }}" == "true" ]] && [[ "${{ steps.cache.outputs.cache-hit }}" == "true" ]]; then
+          mkdir -p "$HOME_CACHE"
+          cp -a "$CACHE_DIR"/. "$HOME_CACHE"/ 2>/dev/null || true
+        fi
+        bash "${{ github.action_path }}/install.sh"
+        if [[ "${{ inputs.cache }}" == "true" ]] && [[ "${{ steps.cache.outputs.cache-hit }}" != "true" ]] && [[ -d "$HOME_CACHE" ]]; then
+          mkdir -p "$CACHE_DIR"
+          cp -a "$HOME_CACHE"/. "$CACHE_DIR"/ 2>/dev/null || true
+        fi
+
+    - name: Save arkvm cache
+      if: inputs.cache == 'true' && steps.cache.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v4
+      with:
+        path: ${{ runner.tool_cache }}/setup-arkvm
+        key: arkvm-${{ runner.os }}-${{ inputs.tag }}

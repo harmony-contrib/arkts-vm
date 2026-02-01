@@ -1,0 +1,41 @@
+name: Test arkvm Action
+
+on: [push, pull_request]
+
+jobs:
+  test-arkvm:
+    strategy:
+      matrix:
+        # x64 Linux, arm64 macOS (GitHub-hosted macos is Apple Silicon)
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Setup arkvm
+        id: setup
+        uses: ./
+        with:
+          tag: v1.0.0
+          cache: true
+
+      - name: Compile hello.ts to abc
+        run: |
+          es2abc example/hello.ts -o hello.abc
+
+      - name: Run abc and assert output is Hello World
+        run: |
+          echo "--- Running ark_js_vm hello.abc ---"
+          output=$(ark_js_vm hello.abc 2>&1)
+          echo "$output"
+          if echo "$output" | grep -q "Hello World"; then
+            echo "PASS: output contains 'Hello World'"
+          else
+            echo "FAIL: expected output to contain 'Hello World', got:"
+            echo "$output"
+            exit 1
+          fi
