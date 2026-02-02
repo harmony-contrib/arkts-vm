@@ -152,7 +152,10 @@ elif [[ -d "bin" ]]; then
     echo "Archive has top-level bin/ and other dirs; grouping into arkvm/"
     mkdir -p arkvm
     for d in $TOP_DIRS; do
-        [[ -n "$d" ]] && mv "$d" arkvm/ 2>/dev/null || true
+        [[ -z "$d" ]] && continue
+        # Do not move 'arkvm' into itself (archive may already have top-level arkvm/)
+        [[ "$d" == "arkvm" ]] && continue
+        mv "$d" arkvm/ 2>/dev/null || true
     done
 else
     echo "Error: No top-level bin found. Archive contents:"
