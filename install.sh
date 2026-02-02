@@ -147,7 +147,9 @@ if [[ "$TOP_COUNT" -eq 1 ]]; then
 fi
 if [[ -n "$SINGLE_DIR" ]] && [[ -d "${SINGLE_DIR}/bin" ]]; then
     echo "Found single top-level dir with bin: $SINGLE_DIR"
-    mv "$SINGLE_DIR" "arkvm"
+    if [[ "$SINGLE_DIR" != "arkvm" ]]; then
+        mv "$SINGLE_DIR" "arkvm"
+    fi
 elif [[ -d "bin" ]]; then
     echo "Archive has top-level bin/ and other dirs; grouping into arkvm/"
     mkdir -p arkvm
