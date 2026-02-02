@@ -24,7 +24,7 @@ jobs:
 
       - name: Compile hello.ts to abc
         run: |
-          es2abc example/hello.ts -output hello.abc
+          es2abc example/hello.ts --output hello.abc
 
       - name: Run abc and assert output is Hello World
         run: |
