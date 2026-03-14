@@ -1,11 +1,11 @@
 # 与 openharmony-zig/setup-zig-ohos 同构：action 在仓库根目录
 # 从 harmony-contrib/arkts-vm releases 安装 arkvm，并配置 PATH 与库搜索路径
 name: 'Setup arkvm'
-description: 'Install arkts-vm (arkvm) from GitHub releases, set PATH and LD_LIBRARY_PATH/DYLD_LIBRARY_PATH'
+description: 'Install arkts-vm (arkvm) for linux-x64 from GitHub releases, set PATH and LD_LIBRARY_PATH'
 
 inputs:
   tag:
-    description: 'Release tag to install (e.g. 6.0.0)'
+    description: 'Deprecated. The action always downloads 6.0.0/arkvm_static_linux_x64.tar.gz'
     required: false
     default: '6.0.0'
   cache:
@@ -22,7 +22,7 @@ outputs:
     description: 'Installation root (e.g. $HOME/setup-arkvm/arkvm)'
     value: ${{ steps.install.outputs.arkvm-path }}
   platform:
-    description: 'Detected platform (linux-x64 or macos-arm64)'
+    description: 'Detected platform (linux-x64)'
     value: ${{ steps.install.outputs.platform }}
 
 runs:
@@ -34,7 +34,7 @@ runs:
       uses: actions/cache/restore@v4
       with:
         path: ${{ runner.tool_cache }}/setup-arkvm
-        key: arkvm-${{ runner.os }}-${{ inputs.tag }}
+        key: arkvm-${{ runner.os }}-linux-x64-6.0.0
 
     - name: Install arkvm
       id: install
@@ -61,4 +61,4 @@ runs:
       uses: actions/cache/save@v4
       with:
         path: ${{ runner.tool_cache }}/setup-arkvm
-        key: arkvm-${{ runner.os }}-${{ inputs.tag }}
+        key: arkvm-${{ runner.os }}-linux-x64-6.0.0

@@ -3,12 +3,12 @@ name: Test arkvm Action
 on: [push, pull_request]
 
 jobs:
-  test-arkvm:
+  test-runtimes:
     strategy:
+      fail-fast: false
       matrix:
-        # x64 Linux, arm64 macOS (GitHub-hosted macos is Apple Silicon)
-        os: [ubuntu-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
+        runtime: [arkjsvm, arkvm]
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Code
@@ -16,25 +16,19 @@ jobs:
         with:
           lfs: true
 
+      - name: Install runtime deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libatomic1
+
       - name: Setup arkvm
         id: setup
         uses: ./
         with:
           cache: false
 
-      - name: Compile hello.ts to abc
+      - name: Smoke test ${{ matrix.runtime }}
+        env:
+          ARKVM_ROOT: ${{ steps.setup.outputs.arkvm-path }}
         run: |
-          es2abc example/hello.ts --output hello.abc
-
-      - name: Run abc and assert output is Hello World
-        run: |
-          echo "--- Running ark_js_vm hello.abc ---"
-          output=$(ark_js_vm hello.abc 2>&1)
-          echo "$output"
-          if echo "$output" | grep -q "Hello World"; then
-            echo "PASS: output contains 'Hello World'"
-          else
-            echo "FAIL: expected output to contain 'Hello World', got:"
-            echo "$output"
-            exit 1
-          fi
+          bash ./scripts/ci/smoke_test.sh "${{ matrix.runtime }}"
